@@ -1,27 +1,30 @@
-import axios from 'axios';
+import { useState, useEffect } from 'react';
 
-export default function Home({ hps }) {
+const Index = () => {
+  const [phones, setPhones] = useState([]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const res = await fetch('/api/phones');
+    const data = await res.json();
+    setPhones(data);
+  };
+
   return (
     <div>
-      <h1>Toko HP</h1>
+      <h1>Daftar Handphone</h1>
       <ul>
-        {hps.map(hp => (
-          <li key={hp.id}>
-            <h2>{hp.nama}</h2>
-            <p>Merek: {hp.merek}</p>
-            <p>Harga: {hp.harga}</p>
+        {phones.map((phone) => (
+          <li key={phone.id}>
+            {phone.brand} {phone.model} - Rp {phone.price}
           </li>
         ))}
       </ul>
     </div>
   );
-}
+};
 
-export async function getStaticProps() {
-  const response = await axios.get('http://localhost:8000/api/hps');
-  const hps = response.data;
-
-  return {
-    props: { hps }
-  };
-}
+export default Index;
